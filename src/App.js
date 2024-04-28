@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 
 function App() {
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(1800);
   const [running, setRunning] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState("#7fffd4");
-  const [pomodoroCount, setPomodoroCount] = useState(0);
+  const [pomodoroCount, setPomodoroCount] = useState(1);
+
+  let correctTime =
+    (time / 60 < 10 ? "0" + Math.floor(time / 60) : Math.floor(time / 60)) +
+    ":" +
+    (time % 60 < 10 ? "0" + (time % 60) : time % 60);
 
   const changeBackgroundColor = () => {
     if (running) {
@@ -33,13 +38,20 @@ function App() {
           setRunning(false);
         }
         setTime((prevTime) => prevTime - 1);
+        let correctTime =
+          ((time - 1) / 60 < 10
+            ? "0" + Math.floor((time - 1) / 60)
+            : Math.floor((time - 1) / 60)) +
+          ":" +
+          ((time - 1) % 60 < 10 ? "0" + ((time - 1) % 60) : (time - 1) % 60);
+        document.title = correctTime + " - Work Is Fun";
       }, 1000);
     } else {
       clearInterval(intervalId);
     }
 
     return () => clearInterval(intervalId);
-  }, [running]);
+  }, [running, time]);
 
   useEffect(() => {
     // Update URL with pomodoro count
@@ -57,11 +69,9 @@ function App() {
       className="text-4xl flex flex-col w-full h-screen justify-center items-center hover:bg-[#00000007] transition-colors"
       onClick={handleClick}
     >
-      <div className="text-white font-bold mb-3 hover:text-[#f6f6f6] transition-colors">{`${
-        (time / 60 < 10 ? "0" + Math.floor(time / 60) : Math.floor(time / 60)) +
-        ":" +
-        (time % 60 < 10 ? "0" + (time % 60) : time % 60)
-      }`}</div>
+      <div className="text-white font-bold mb-3 hover:text-[#f6f6f6] transition-colors">
+        {correctTime}
+      </div>
       <button
         onClick={(e) => {
           handleClick();
